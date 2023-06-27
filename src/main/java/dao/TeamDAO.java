@@ -15,6 +15,7 @@ public class TeamDAO {
     private Connection connection;
 
     public TeamDAO(Connection connection) {
+
         this.connection = connection;
     }
 
@@ -22,12 +23,12 @@ public class TeamDAO {
 
     //팀등록
     //@Param
-    public void registerTeam(int stadiumId, String name) throws SQLException {
+    public void registerTeam(String name, int stadiumId) throws SQLException {
         String query = "INSERT INTO team (stadium_id, name) VALUES (?,?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, stadiumId);
-            statement.setString(2,name);
+            statement.setString(1, name);
+            statement.setInt(2, stadiumId);
             statement.executeUpdate();
         }
     }
