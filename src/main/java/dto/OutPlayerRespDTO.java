@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 @Getter
 public class OutPlayerRespDTO {
     private int id;
-    private String playerName;
+    private int playerId;
     private String reason;
     private Timestamp createdAt;
 
@@ -18,7 +18,7 @@ public class OutPlayerRespDTO {
     public String toString() {
         return "OutPlayerRespDTO{" +
                 "id=" + id +
-                ", playerName='" + playerName + '\'' +
+                ", playerId='" + playerId + '\'' +
                 ", reason='" + reason + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
