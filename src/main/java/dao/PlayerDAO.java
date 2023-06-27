@@ -1,5 +1,6 @@
 package dao;
 
+import db.DBConnection;
 import model.Player;
 
 import java.sql.*;
@@ -40,6 +41,16 @@ public class PlayerDAO {
     }
 
     //선수 목록 업데이트(퇴출선수 생길 시)
+    public int updatePlayer(int playerId){
+        String updatequery = "UPDATE player SET team_id =NULL WHERE id = ?";
+        try(PreparedStatement updatestatement = connection.prepareStatement(updatequery)){
+            updatestatement.setInt(1,playerId);
+            return updatestatement.executeUpdate();
+        }catch (SQLException e){
+            e.printStackTrace();;
+            return 0;
+        }
+    }
 
 
 
