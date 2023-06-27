@@ -14,14 +14,14 @@ public class PlayerDAO {
     }
 
     // 선수 등록
-    public void registerPlayer(int teamId, String name, String position, Timestamp createdAt) throws SQLException {
-        String query = "INSERT INTO player (team_id, name, position, created_at) VALUES (?, ?, ?, ?)";
+    public void registerPlayer(int teamId, String name, String position) throws SQLException {
+        String query = "INSERT INTO player (team_id, name, position) VALUES (?, ?, ?)";
         String checkquery = "SELECT COUNT(*) FROM player WHERE team_id =? AND position =?"; //position 중복 체크 쿼리
 
         try (PreparedStatement statement = connection.prepareStatement(query);
              PreparedStatement checkStatement = connection.prepareStatement(checkquery)) {
-            checkStatement.setInt(1,teamId);
-            checkStatement.setString(2,position);
+             checkStatement.setInt(1,teamId);
+             checkStatement.setString(2,position);
             //중복 체크
             try (ResultSet resultSet = checkStatement.executeQuery()) {
                 if (resultSet.next()) {
@@ -35,26 +35,32 @@ public class PlayerDAO {
             statement.setInt(1, teamId);
             statement.setString(2, name);
             statement.setString(3, position);
-            statement.setTimestamp(4, createdAt);
             statement.executeUpdate();
         }
     }
 
-    // 모든 선수 조회
-    public List<Player> findAllPlayer() throws SQLException {
-        List<Player> playerList = new ArrayList<>();
-        String query = "SELECT id, name, position, created_at FROM player"; //team_id는 출력 X
+    //선수 목록 업데이트(퇴출선수 생길 시)
 
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
-            while (resultSet.next()) {
-                Player player = Player.builder()
-                        .id(resultSet.getInt("id"))
-                        .name(resultSet.getString("name"))
-                        .position(resultSet.getString("position"))
-                        .createdAt(resultSet.getTimestamp("created_at"))
-                        .build();
-                playerList.add(player);
+
+
+
+    // 팀별 선수 조회
+    public List<Player> findAllPlayer(int teamId) throws SQLException {
+        List<Player> playerList = new ArrayList<>();
+        String query = "SELECT id, name, position, created_at FROM player WHERE teamID = ?"; //team_id는 출력 X
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, teamId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    Player player = Player.builder()
+                            .id(resultSet.getInt("id"))
+                            .name(resultSet.getString("name"))
+                            .position(resultSet.getString("position"))
+                            .createdAt(resultSet.getTimestamp("created_at"))
+                            .build();
+                    playerList.add(player);
+                }
             }
         }
 

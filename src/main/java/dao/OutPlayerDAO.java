@@ -14,14 +14,13 @@ public class OutPlayerDAO {
         this.connection =connection;
     }
 
-    //톼출 선수 등록
-    public void  registerOutPlayer(int playerId, String reason, Timestamp createdAt ) throws SQLException{
-        String query = "insert into out_player(player_id, reason, created_at) values (?,?,?)";
+    //퇴출 선수 등록
+    public void  registerOutPlayer(int playerId, String reason ) throws SQLException{
+        String query = "insert into out_player(player_id, reason) values (?,?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, playerId);
             statement.setString(2, reason);
-            statement.setTimestamp(3, createdAt);
             statement.executeUpdate();
         }
     }
