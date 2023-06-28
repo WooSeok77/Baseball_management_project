@@ -46,9 +46,9 @@ public class TeamDAO {
             while(resultSet.next()){
                 Team team = new Team(
                         resultSet.getInt("id"),
-                        resultSet.getInt("stadiumId"),
+                        resultSet.getInt("stadium_id"),
                         resultSet.getString("name"),
-                        resultSet.getTimestamp("createdAt")
+                        resultSet.getTimestamp("created_at")
                 );
                 teamList.add(team);
             }
