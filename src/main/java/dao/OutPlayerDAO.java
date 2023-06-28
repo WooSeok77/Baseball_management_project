@@ -27,25 +27,6 @@ public class OutPlayerDAO {
         }
     }
 
-    /*//퇴출 선수 목록 조회
-    public List<OutPlayer> findAllOutPlayer() throws SQLException {
-        List<OutPlayer> outPlayerList = new ArrayList<>();
-        String query = "SELECT * FROM out_player";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)){
-                while (resultSet.next()) {
-                    OutPlayer outplayer = new OutPlayer(
-                            resultSet.getInt("id"),
-                            resultSet.getInt("playerId"),
-                            resultSet.getString("reason"),
-                            resultSet.getTimestamp("createdAt")
-                            );
-                    outPlayerList.add(outplayer);
-                }
-            }
-        return outPlayerList;
-    }*/
-
     //퇴출 선수 목록 조회
     public List<OutPlayerRespDTO> findAllOutPlayers() throws SQLException {
         List<OutPlayerRespDTO> OutPlayers = new ArrayList<>();
