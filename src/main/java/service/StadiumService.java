@@ -13,16 +13,24 @@ public class StadiumService {
         this.stadiumDAO = stadiumDAO;
     }
 
-    public void createStadium(String name) {
+    public String createStadium(String name) {
         try {
-            stadiumDAO.createStadium(name);
+           int rs = stadiumDAO.createStadium(name);
+           if (rs >0){
+               return "성공";
+           } else {
+               return "실패";
+           }
         }catch(SQLException | RuntimeException e){
             e.printStackTrace();
+            return "예외실패";
         }
     }
 
     public List<Stadium> findAll() {
-        return stadiumDAO.findAll();
+        List<Stadium> stadiumList = stadiumDAO.findAll();
+
+        return stadiumList;
     }
 
 

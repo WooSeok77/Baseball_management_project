@@ -20,13 +20,20 @@ public class StadiumDAO {
     //야구장 등록
     // @Param name
     // @throws SQLException
-    public void createStadium(String name) throws SQLException {
+    public int createStadium(String name) throws SQLException {
         String query = "INSERT INTO stadium (name) VALUES (?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
-            statement.executeUpdate();
+            int rowCount = statement.executeUpdate();
+
+            return rowCount;
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
         }
+        return -1;
     }
 
     //전체 야구장 목록보기
