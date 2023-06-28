@@ -15,6 +15,7 @@ public class TeamDAO {
     private Connection connection;
 
     public TeamDAO(Connection connection) {
+
         this.connection = connection;
     }
 
@@ -22,14 +23,20 @@ public class TeamDAO {
 
     //팀등록
     //@Param
-    public void registerTeam(int stadiumId, String name) throws SQLException {
-        String query = "INSERT INTO team (stadium_id, name) VALUES (?,?)";
+    public int registerTeam(int stadiumId, String name) throws SQLException {
+        String query = "INSERT INTO team (stadium_id, name, created_at) VALUES (?,?, now())";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, stadiumId);
-            statement.setString(2,name);
-            statement.executeUpdate();
+            statement.setString(2, name);
+            int rowCount = statement.executeUpdate();
+
+            return rowCount;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
         }
+        return -1;
     }
 
     //전체팀목록조회
@@ -45,9 +52,9 @@ public class TeamDAO {
             while(resultSet.next()){
                 Team team = new Team(
                         resultSet.getInt("id"),
-                        resultSet.getInt("stadiumId"),
+                        resultSet.getInt("stadium_id"),
                         resultSet.getString("name"),
-                        resultSet.getTimestamp("createdAt")
+                        resultSet.getTimestamp("created_at")
                 );
                 teamList.add(team);
             }
