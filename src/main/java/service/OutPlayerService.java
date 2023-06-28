@@ -2,8 +2,10 @@ package service;
 
 import dao.OutPlayerDAO;
 import dao.PlayerDAO;
+import dto.OutPlayerRespDTO;
 import model.OutPlayer;
 import java.sql.SQLException;
+import java.util.List;
 
 public class OutPlayerService {
     private OutPlayerDAO outPlayerDAO;
@@ -25,6 +27,16 @@ public class OutPlayerService {
             return "퇴출 선수 등록이 성공적으로 완료되었습니다.";
         } catch (SQLException e) {
             return "선수 등록 중 오류가 발생했습니다: " + e.getMessage();
+        }
+    }
+
+    //퇴출 선수 목록 조회
+    public List<OutPlayerRespDTO> findAllOutPlayers() {
+        try {
+            return outPlayerDAO.findAllOutPlayers();
+        } catch (SQLException e) {
+            System.err.println("퇴출 선수 목록 조회 중 오류가 발생했습니다: " + e.getMessage());
+            return null;
         }
     }
 }
