@@ -23,14 +23,20 @@ public class TeamDAO {
 
     //팀등록
     //@Param
-    public void registerTeam(String name, int stadiumId) throws SQLException {
+    public int registerTeam(String name, int stadiumId) throws SQLException {
         String query = "INSERT INTO team (stadium_id, name) VALUES (?,?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             statement.setInt(2, stadiumId);
-            statement.executeUpdate();
+            int rowCount = statement.executeUpdate();
+
+            return rowCount;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+
         }
+        return -1;
     }
 
     //전체팀목록조회

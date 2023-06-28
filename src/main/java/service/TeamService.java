@@ -14,12 +14,18 @@ public class TeamService {
         this.teamDAO = teamDAO;
     }
 
-    public void registerTeam(String name, int studentId) {
+    public String registerTeam(String name, int studentId) {
         try {
-            teamDAO.registerTeam(name, studentId);
+           int rs =  teamDAO.registerTeam(name, studentId);
+           if (rs >0) {
+               return "성공";
+           } else {
+              return "실패";
+           }
 
         }catch(SQLException e) {
             e.printStackTrace();
+            return "예외실패";
         }
     }
 
