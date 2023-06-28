@@ -17,6 +17,7 @@ public class StadiumService {
         try {
            int rs = stadiumDAO.createStadium(name);
            if (rs >0){
+               stadiumDAO.createStadium(name);
                return "성공";
            } else {
                return "실패";

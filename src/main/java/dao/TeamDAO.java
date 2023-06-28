@@ -23,12 +23,12 @@ public class TeamDAO {
 
     //팀등록
     //@Param
-    public int registerTeam(String name, int stadiumId) throws SQLException {
-        String query = "INSERT INTO team (stadium_id, name) VALUES (?,?)";
+    public int registerTeam(int stadiumId, String name) throws SQLException {
+        String query = "INSERT INTO team (stadium_id, name, created_at) VALUES (?,?, now())";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, name);
-            statement.setInt(2, stadiumId);
+            statement.setInt(1, stadiumId);
+            statement.setString(2, name);
             int rowCount = statement.executeUpdate();
 
             return rowCount;

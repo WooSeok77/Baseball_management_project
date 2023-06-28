@@ -14,9 +14,9 @@ public class TeamService {
         this.teamDAO = teamDAO;
     }
 
-    public String registerTeam(String name, int studentId) {
+    public String registerTeam(int stadiumId, String name ) {
         try {
-           int rs =  teamDAO.registerTeam(name, studentId);
+           int rs =  teamDAO.registerTeam(stadiumId, name);
            if (rs >0) {
                return "성공";
            } else {
@@ -30,7 +30,8 @@ public class TeamService {
     }
 
     public List<Team> findAll(){
-        return teamDAO.findAll();
+        List<Team> teamList = teamDAO.findAll();
+        return teamList;
     }
 
 

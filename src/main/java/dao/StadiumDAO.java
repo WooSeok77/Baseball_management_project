@@ -12,6 +12,7 @@ import java.util.List;
 public class StadiumDAO {
     private Connection connection;
 
+
     public StadiumDAO(Connection connection) {
         this.connection = connection;
     }
@@ -21,19 +22,16 @@ public class StadiumDAO {
     // @Param name
     // @throws SQLException
     public int createStadium(String name) throws SQLException {
-        String query = "INSERT INTO stadium (name) VALUES (?)";
+        String query = "INSERT INTO stadium (name, created_at) VALUES (?, now())";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
             int rowCount = statement.executeUpdate();
-
             return rowCount;
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-
+            return -1;
         }
-        return -1;
     }
 
     //전체 야구장 목록보기
