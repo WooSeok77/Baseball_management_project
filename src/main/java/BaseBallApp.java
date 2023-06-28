@@ -1,6 +1,10 @@
+import dao.OutPlayerDAO;
 import dao.PlayerDAO;
 import db.DBConnection;
+import dto.OutPlayerRespDTO;
+import model.OutPlayer;
 import model.Player;
+import service.OutPlayerService;
 import service.PlayerService;
 
 import java.sql.Connection;
@@ -12,7 +16,9 @@ public class BaseBallApp {
     public static void main(String[] args) throws SQLException {
         Connection connection = DBConnection.getInstance();
         PlayerDAO playerDAO =new PlayerDAO(connection);
+        OutPlayerDAO outPlayerDAO =new OutPlayerDAO(connection);
         PlayerService playerService = new PlayerService(playerDAO);
+        OutPlayerService outPlayerService =new OutPlayerService(outPlayerDAO,playerDAO);
 
         System.out.println("어떤 기능을 요청 하시겠습니까?");
         Scanner sc =new Scanner(System.in);
@@ -40,7 +46,22 @@ public class BaseBallApp {
 
             System.out.println(players);
 
-        } else {
+        } else if (function.equals("퇴출 등록")) {
+            String[] paramArray = params.split("&"); //paramArray={playerId=1, reason=도박}
+            int playerId = Integer.parseInt(parsedInput[0].split("=")[1]); //1
+            String reason = paramArray[1].split("=")[1]; //도박
+
+            String outplayer =outPlayerService.registerOutPlayer(playerId,reason);
+
+            System.out.println(outplayer);
+
+        }else if (function.equals("퇴출목록")) {
+
+            List<OutPlayerRespDTO> outplayers = outPlayerService.findAllOutPlayers( );
+
+            System.out.println(outplayers);
+
+        }else {
             System.out.println("지원하지 않는 기능입니다.");
         }
 
