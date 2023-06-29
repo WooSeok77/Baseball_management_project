@@ -28,15 +28,21 @@ public class OutPlayerDAO {
     }
 
     //퇴출 선수 등록
-    public void  registerOutPlayer(int playerId, String reason ) throws SQLException{
+    public int  registerOutPlayer(int playerId, String reason ) throws SQLException{
         String query = "insert into out_player(player_id, reason) values (?,?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, playerId);
             statement.setString(2, reason);
-            statement.executeUpdate();
+            int rowCount = statement.executeUpdate();
+
+            return rowCount;
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
+        return -1;
     }
+
 
     //퇴출 선수 목록 조회
     public List<OutPlayerRespDTO> findAllOutPlayers() throws SQLException {

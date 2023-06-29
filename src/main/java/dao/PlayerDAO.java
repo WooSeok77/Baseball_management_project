@@ -25,7 +25,7 @@ public class PlayerDAO {
     }
 
     // 선수 등록
-    public void registerPlayer(int teamId, String name, String position) throws SQLException {
+    public int registerPlayer(int teamId, String name, String position) throws SQLException {
         String query = "INSERT INTO player (team_id, name, position) VALUES (?, ?, ?)";
         String checkquery = "SELECT COUNT(*) FROM player WHERE team_id =? AND position =?"; //position 중복 체크 쿼리
 
@@ -46,9 +46,15 @@ public class PlayerDAO {
             statement.setInt(1, teamId);
             statement.setString(2, name);
             statement.setString(3, position);
-            statement.executeUpdate();
+            int rowCount = statement.executeUpdate();
+
+            return rowCount;
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
+        return -1;
     }
+
 
     //선수 목록 업데이트(퇴출선수 생길 시)
     public int updatePlayer(int playerId){

@@ -18,12 +18,18 @@ public class PlayerService {
     public String registerPlayer(int teamId, String name, String position) {
         try {
             // 선수 등록
-            playerDAO.registerPlayer(teamId, name, position);
-            return "선수 등록이 성공적으로 완료되었습니다.";
-        } catch (SQLException e) {
-            return "선수 등록 중 오류가 발생했습니다: " + e.getMessage();
+            int rs = playerDAO.registerPlayer(teamId, name, position);
+            if (rs >0) {
+                return "성공";
+            } else {
+                return "실패";
+            }
+        } catch(SQLException | RuntimeException e){
+            e.printStackTrace();
+            return "예외실패";
         }
     }
+
 
     public List<Player> getPlayersByTeamId(int teamId) {
         try {
