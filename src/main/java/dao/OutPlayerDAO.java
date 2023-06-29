@@ -53,14 +53,15 @@ public class OutPlayerDAO {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(outquery)) {
             while (resultSet.next()) {
-                OutPlayerRespDTO outPlayer = new OutPlayerRespDTO();
                 PlayerRespDTO playerRespDTO =new PlayerRespDTO();
+                OutPlayerRespDTO outPlayer = new OutPlayerRespDTO(
+                        resultSet.getTimestamp("created_at"),
+                        resultSet.getString("reason"),
+                        playerRespDTO.setId(resultSet.getInt("id")),
+                        playerRespDTO.setName(resultSet.getString("name")),
+                        playerRespDTO.setPosition(resultSet.getString("position"))
+                );
 
-                playerRespDTO.setId(resultSet.getInt("id"));
-                playerRespDTO.setName(resultSet.getString("name"));
-                playerRespDTO.setPosition(resultSet.getString("position"));
-                outPlayer.setReason(resultSet.getString("reason"));
-                outPlayer.setCreatedAt(resultSet.getTimestamp("created_at"));
                 // 퇴출된 선수 정보를 OutPlayerRespDTO에 매핑하는 코드 작성
                 // resultSet에서 필요한 칼럼들을 가져와서 OutPlayer에 설정
                 OutPlayers.add(outPlayer);

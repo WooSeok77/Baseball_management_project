@@ -1,5 +1,6 @@
 package dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,13 @@ public class PlayerRespDTO {
     private String name;
     private String position;
     private Timestamp createdAt;
+
+    @Builder
+    public PlayerRespDTO(int id, String name, String position) {
+        this.id = id;
+        this.name = name;
+        this.position = position;
+    }
 
     @Override
     public String toString() {

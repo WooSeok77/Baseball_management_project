@@ -4,6 +4,7 @@ import dao.StadiumDAO;
 import dao.TeamDAO;
 import db.DBConnection;
 import dto.OutPlayerRespDTO;
+import dto.PositionRespDTO;
 import model.Player;
 import model.Stadium;
 import model.Team;
@@ -27,9 +28,6 @@ public class BaseBallApp {
         OutPlayerDAO outPlayerDAO =new OutPlayerDAO(connection);
         PlayerService playerService = new PlayerService(playerDAO);
         OutPlayerService outPlayerService =new OutPlayerService(outPlayerDAO,playerDAO);
-
-
-
         while (true) {
             System.out.println();
             System.out.println("어떤 기능을 요청 하시겠습니까?");
@@ -54,7 +52,6 @@ public class BaseBallApp {
                     System.out.println("TeamId : " + team.getId() + " StadiumId : " + team.getStadiumId() + " " + team.getName() + " " + team.getCreatedAt());
                 }
             }
-
 
             String[] parsedInput = input.split("\\?");
             String function = parsedInput[0];
@@ -81,6 +78,7 @@ public class BaseBallApp {
                 System.out.println(team);
             }
 
+
             if (function.equals("선수등록")) {
                 String params = parsedInput[1];
                 String[] paramArray = params.split("&"); //paramArray={teamId=1,name=이대호,position=1루수}
@@ -99,8 +97,9 @@ public class BaseBallApp {
 
                 List<Player> players = playerService.getPlayersByTeamId(teamId);
 
-                System.out.println(players);
-
+                for(Player player :players){
+                    System.out.println(player.getId() + " " + player.getName() + " " + player.getPosition() + " " + player.getCreatedAt());
+                }
             }
 
             if (function.equals("퇴출 등록")) {
@@ -114,9 +113,7 @@ public class BaseBallApp {
                 System.out.println(outplayer);
 
             }
-
-            if (function.equals("퇴출목록")) {
-
+            if (input.equals("퇴출목록")) {
                 List<OutPlayerRespDTO> outplayers = outPlayerService.findAllOutPlayers( );
                 for (OutPlayerRespDTO outPlayerRespDTO : outplayers) {
                     System.out.println("p.id : " + outPlayerRespDTO.getId() +
@@ -125,7 +122,10 @@ public class BaseBallApp {
                             " o.reason " + outPlayerRespDTO.getReason() +
                             " o.day " + outPlayerRespDTO.getCreatedAt());
                 }
-                System.out.println(outplayers);
+            }
+
+            if (input.equals("포지션별목록")) {
+                //List<PositionRespDTO> positionRespDto = playerService.();
 
             }
         }

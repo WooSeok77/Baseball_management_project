@@ -21,10 +21,10 @@ public class OutPlayerService {
         try {
             // 퇴출 선수 등록(insert)
             int rs =outPlayerDAO.registerOutPlayer(playerId, reason);
-            // 해당 선수의 team_id를 null로 업데이트
-            playerDAO.updatePlayer(outPlayer.getPlayerId());
 
             if (rs >0) {
+                // 해당 선수의 team_id를 null로 업데이트
+                playerDAO.updatePlayer(outPlayer.getPlayerId());
                 return "성공";
             } else {
                 return "실패";
