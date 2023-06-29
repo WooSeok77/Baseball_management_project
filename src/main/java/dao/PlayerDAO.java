@@ -59,6 +59,7 @@ public class PlayerDAO {
     //선수 목록 업데이트(퇴출선수 생길 시)
     public int updatePlayer(int playerId){
         String updatequery = "UPDATE player SET team_id =NULL WHERE id = ?";
+        String checkQuery = "SELECT COUNT(*) FROM out_player WHERE player_id = ?";
         try(PreparedStatement updatestatement = connection.prepareStatement(updatequery)){
             updatestatement.setInt(1,playerId);
             return updatestatement.executeUpdate();
