@@ -3,6 +3,8 @@ import dao.PlayerDAO;
 import dao.StadiumDAO;
 import dao.TeamDAO;
 import db.DBConnection;
+import dto.OutPlayerRespDTO;
+import model.Player;
 import model.Stadium;
 import model.Team;
 import service.OutPlayerService;
@@ -79,14 +81,53 @@ public class BaseBallApp {
                 System.out.println(team);
             }
 
-            if(function.equals("선수목록")) {
+            if (function.equals("선수등록")) {
                 String params = parsedInput[1];
+                String[] paramArray = params.split("&"); //paramArray={teamId=1,name=이대호,position=1루수}
+                int teamId = Integer.parseInt(paramArray[0].split("=")[1]); //1
+                String name = paramArray[1].split("=")[1]; //이대호
+                String position = paramArray[2].split("=")[1]; // 1루수
+
+                String player = playerService.registerPlayer(teamId, name, position);
+
+                System.out.println(player);
 
             }
 
+            if (function.equals("선수목록")) {
+                int teamId = Integer.parseInt(parsedInput[1].split("=")[1]); //1
 
+                List<Player> players = playerService.getPlayersByTeamId(teamId);
 
+                System.out.println(players);
 
+            }
+
+            if (function.equals("퇴출 등록")) {
+                String params = parsedInput[1];
+                String[] paramArray = params.split("&"); //paramArray={playerId=1, reason=도박}
+                int playerId = Integer.parseInt(parsedInput[0].split("=")[1]); //1
+                String reason = paramArray[1].split("=")[1]; //도박
+
+                String outplayer =outPlayerService.registerOutPlayer(playerId,reason);
+
+                System.out.println(outplayer);
+
+            }
+
+            if (function.equals("퇴출목록")) {
+
+                List<OutPlayerRespDTO> outplayers = outPlayerService.findAllOutPlayers( );
+                for (OutPlayerRespDTO outPlayerRespDTO : outplayers) {
+                    System.out.println("p.id : " + outPlayerRespDTO.getId() +
+                            " p.name : " + outPlayerRespDTO.getName() +
+                            " p.position : " + outPlayerRespDTO.getPosition() +
+                            " o.reason " + outPlayerRespDTO.getReason() +
+                            " o.day " + outPlayerRespDTO.getCreatedAt());
+                }
+                System.out.println(outplayers);
+
+            }
         }
     }
 }
