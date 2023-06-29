@@ -1,6 +1,5 @@
 package dao;
 
-import db.DBConnection;
 import model.Player;
 
 import java.sql.*;
@@ -9,6 +8,17 @@ import java.util.List;
 
 public class PlayerDAO {
     private Connection connection;
+
+    private static PlayerDAO instance;
+
+    private PlayerDAO(){};
+
+    public static PlayerDAO getInstance() {
+        if(instance == null) {
+            instance = new PlayerDAO();
+        }
+        return instance;
+    }
 
     public PlayerDAO(Connection connection) {
         this.connection = connection;

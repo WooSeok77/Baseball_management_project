@@ -1,13 +1,16 @@
+import dao.OutPlayerDAO;
+import dao.PlayerDAO;
 import dao.StadiumDAO;
 import dao.TeamDAO;
 import db.DBConnection;
 import model.Stadium;
 import model.Team;
+import service.OutPlayerService;
+import service.PlayerService;
 import service.StadiumService;
 import service.TeamService;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,10 +21,10 @@ public class BaseBallApp {
         TeamDAO teamDAO = new TeamDAO(connection);
         StadiumService stadiumService = new StadiumService(stadiumDAO);
         TeamService teamService = new TeamService(teamDAO);
-//        PlayerDAO playerDAO =new PlayerDAO(connection);
-//        OutPlayerDAO outPlayerDAO =new OutPlayerDAO(connection);
-//        PlayerService playerService = new PlayerService(playerDAO);
-//        OutPlayerService outPlayerService =new OutPlayerService(outPlayerDAO,playerDAO);
+        PlayerDAO playerDAO =new PlayerDAO(connection);
+        OutPlayerDAO outPlayerDAO =new OutPlayerDAO(connection);
+        PlayerService playerService = new PlayerService(playerDAO);
+        OutPlayerService outPlayerService =new OutPlayerService(outPlayerDAO,playerDAO);
 
 
 
@@ -50,6 +53,7 @@ public class BaseBallApp {
                 }
             }
 
+
             String[] parsedInput = input.split("\\?");
             String function = parsedInput[0];
 
@@ -73,9 +77,12 @@ public class BaseBallApp {
                 String team = teamService.registerTeam(stadiumId, name);
 
                 System.out.println(team);
+            }
+
+            if(function.equals("선수목록")) {
+                String params = parsedInput[1];
 
             }
-            //String params = parsedInput[1];
 
 
 

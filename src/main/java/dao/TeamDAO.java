@@ -1,6 +1,5 @@
 package dao;
 
-import model.Stadium;
 import model.Team;
 
 import java.sql.Connection;
@@ -13,6 +12,19 @@ import java.util.List;
 public class TeamDAO {
 
     private Connection connection;
+
+    private static TeamDAO instance;
+
+    private TeamDAO(){};
+
+    public static TeamDAO getInstance() {
+        if(instance == null) {
+            instance = new TeamDAO();
+        }
+        return instance;
+    }
+
+
 
     public TeamDAO(Connection connection) {
 

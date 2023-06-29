@@ -12,6 +12,17 @@ public class OutPlayerDAO {
     //선수 퇴출 등록, 선수 퇴출 목록
     private Connection connection;
 
+    private static OutPlayerDAO instance;
+
+    private OutPlayerDAO(){};
+
+    public static OutPlayerDAO getInstance() {
+        if(instance == null) {
+            instance = new OutPlayerDAO();
+        }
+        return instance;
+    }
+
     public OutPlayerDAO(Connection connection){
         this.connection =connection;
     }

@@ -1,7 +1,7 @@
 package dao;
 
-import model.Stadium;
 
+import model.Stadium;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +11,17 @@ import java.util.List;
 
 public class StadiumDAO {
     private Connection connection;
+
+    private static StadiumDAO instance;
+
+    private StadiumDAO(){};
+
+    public static StadiumDAO getInstance() {
+        if(instance == null) {
+            instance = new StadiumDAO();
+        }
+        return instance;
+    }
 
 
     public StadiumDAO(Connection connection) {
