@@ -29,9 +29,23 @@ public class OutPlayerDAO {
 
     //퇴출 선수 등록
     public int  registerOutPlayer(int playerId, String reason ) throws SQLException{
-        String query = "insert into out_player(player_id, reason) values (?,?)";
+        String checkQuery = "SELECT COUNT(*) FROM out_player WHERE player_id = ?";
+        String query = "insert into out_player(player_id, reason, created_at) values (?,?, now())";
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (PreparedStatement checkStatement = connection.prepareStatement(checkQuery);
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            //퇴출 정보가 있는지 확인
+            checkStatement.setInt(1, playerId);
+            //중복 체크
+            try (ResultSet resultSet = checkStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    if (count > 0) {
+                        throw new SQLException("중복 퇴출");
+                    }
+                }
+            }
+
             statement.setInt(1, playerId);
             statement.setString(2, reason);
             int rowCount = statement.executeUpdate();
@@ -43,34 +57,34 @@ public class OutPlayerDAO {
         return -1;
     }
 
-
     //퇴출 선수 목록 조회
-    public List<OutPlayerRespDTO> findAllOutPlayers() throws SQLException {
-        List<OutPlayerRespDTO> OutPlayers = new ArrayList<>();
+    public List<OutPlayerRespDTO.OutPlayerSelectDTO> findAllOutPlayers() throws SQLException {
+        List<OutPlayerRespDTO.OutPlayerSelectDTO> OutPlayers = new ArrayList<>();
 
         // player와 out_player 테이블을 OuterJoin
-        String outquery = "SELECT p.id, p.name, p.position, o.reason ,o.created_at FROM player p LEFT JOIN out_player o ON p.id = o.player_id WHERE o.player_id IS NOT NULL";
+        String outquery = "SELECT p.id, p.name, p.position, o.reason ,o.created_at FROM player p LEFT JOIN out_player o ON p.id = o.player_id";
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(outquery)) {
             while (resultSet.next()) {
-                PlayerRespDTO playerRespDTO =new PlayerRespDTO();
-                OutPlayerRespDTO outPlayer = new OutPlayerRespDTO(
-                        resultSet.getTimestamp("created_at"),
-                        resultSet.getString("reason"),
-                        playerRespDTO.setId(resultSet.getInt("id")),
-                        playerRespDTO.setName(resultSet.getString("name")),
-                        playerRespDTO.setPosition(resultSet.getString("position"))
-                );
-
-                // 퇴출된 선수 정보를 OutPlayerRespDTO에 매핑하는 코드 작성
-                // resultSet에서 필요한 칼럼들을 가져와서 OutPlayer에 설정
-                OutPlayers.add(outPlayer);
+                OutPlayerRespDTO.OutPlayerSelectDTO outPlayerSelectDTO = buildOutPlayerFromResultSet(resultSet);
+                OutPlayers.add(outPlayerSelectDTO);
             }
-        }catch (SQLException e) {
-            // 오류 처리
-            e.printStackTrace();
         }
         return OutPlayers;
+    }
+    private OutPlayerRespDTO.OutPlayerSelectDTO buildOutPlayerFromResultSet(ResultSet resultSet) throws SQLException {
+        int id = resultSet.getInt("id");
+        String name = resultSet.getString("name");
+        String position = resultSet.getString("position");
+        String reason = resultSet.getString("reason");
+        Timestamp outPlayerCreatedAt = resultSet.getTimestamp("created_at");
+        return OutPlayerRespDTO.OutPlayerSelectDTO.builder()
+                .id(id)
+                .name(name)
+                .position(position)
+                .reason(reason)
+                .createdAt(outPlayerCreatedAt)
+                .build();
     }
 }
 

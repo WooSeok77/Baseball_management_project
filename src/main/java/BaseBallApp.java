@@ -14,11 +14,12 @@ import service.StadiumService;
 import service.TeamService;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
 public class BaseBallApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Connection connection = DBConnection.getInstance();
         StadiumDAO stadiumDAO = new StadiumDAO(connection);
         TeamDAO teamDAO = new TeamDAO(connection);
@@ -98,14 +99,14 @@ public class BaseBallApp {
                 List<Player> players = playerService.getPlayersByTeamId(teamId);
 
                 for(Player player :players){
-                    System.out.println(player.getId() + " " + player.getName() + " " + player.getPosition() + " " + player.getCreatedAt());
+                    System.out.println(player.getId() + " " +" "+ player.getName() + " " + player.getPosition() + " " + player.getCreatedAt());
                 }
             }
 
-            if (function.equals("퇴출 등록")) {
+            if (function.equals("퇴출등록")) {
                 String params = parsedInput[1];
                 String[] paramArray = params.split("&"); //paramArray={playerId=1, reason=도박}
-                int playerId = Integer.parseInt(parsedInput[0].split("=")[1]); //1
+                int playerId = Integer.parseInt(paramArray[0].split("=")[1]); //1
                 String reason = paramArray[1].split("=")[1]; //도박
 
                 String outplayer =outPlayerService.registerOutPlayer(playerId,reason);
@@ -114,13 +115,10 @@ public class BaseBallApp {
 
             }
             if (input.equals("퇴출목록")) {
-                List<OutPlayerRespDTO> outplayers = outPlayerService.findAllOutPlayers( );
-                for (OutPlayerRespDTO outPlayerRespDTO : outplayers) {
-                    System.out.println("p.id : " + outPlayerRespDTO.getId() +
-                            " p.name : " + outPlayerRespDTO.getName() +
-                            " p.position : " + outPlayerRespDTO.getPosition() +
-                            " o.reason " + outPlayerRespDTO.getReason() +
-                            " o.day " + outPlayerRespDTO.getCreatedAt());
+                List<OutPlayerRespDTO.OutPlayerSelectDTO> outplayers = outPlayerService.findAllOutPlayers( );
+                System.out.println("p.id  p.name  p.position  o.reason(이유)  o.day(퇴출일)    ");
+                for (OutPlayerRespDTO.OutPlayerSelectDTO outPlayerRespDTO : outplayers) {
+                    System.out.println( outPlayerRespDTO.getId() +"   "+ outPlayerRespDTO.getName() +"      "+ outPlayerRespDTO.getPosition() +"         "+ outPlayerRespDTO.getReason() +"     "+ outPlayerRespDTO.getCreatedAt());
                 }
             }
 
