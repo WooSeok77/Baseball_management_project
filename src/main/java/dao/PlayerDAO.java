@@ -26,7 +26,7 @@ public class PlayerDAO {
 
     // 선수 등록
     public int registerPlayer(int teamId, String name, String position) throws SQLException {
-        String query = "INSERT INTO player (team_id, name, position) VALUES (?, ?, ?)";
+        String query = "INSERT INTO player (team_id, name, position, created_at) VALUES (?, ?, ?, now())";
         String checkquery = "SELECT COUNT(*) FROM player WHERE team_id =? AND position =?"; //position 중복 체크 쿼리
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -74,23 +74,27 @@ public class PlayerDAO {
     // 팀별 선수 조회
     public List<Player> findAllPlayer(int teamId) throws SQLException {
         List<Player> playerList = new ArrayList<>();
-        String query = "SELECT id, name, position, created_at FROM player WHERE teamID = ?"; //team_id는 출력 X
+        String query = "SELECT id, name, position, created_at FROM player WHERE team_id = ?"; //team_id는 출력 X
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, teamId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
-                    Player player = Player.builder()
-                            .id(resultSet.getInt("id"))
-                            .name(resultSet.getString("name"))
-                            .position(resultSet.getString("position"))
-                            .createdAt(resultSet.getTimestamp("created_at"))
-                            .build();
+                    Player player = new Player(
+                            resultSet.getInt("id"),
+                            resultSet.getString("name"),
+                            resultSet.getString("position"),
+                            resultSet.getTimestamp("created_at")
+                    );
+
                     playerList.add(player);
                 }
             }
-        }
+            return playerList;
 
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
         return playerList;
     }
 }
