@@ -1,7 +1,7 @@
 package dao;
 
-import model.Stadium;
 
+import model.Stadium;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +12,18 @@ import java.util.List;
 public class StadiumDAO {
     private Connection connection;
 
+    private static StadiumDAO instance;
+
+    private StadiumDAO(){};
+
+    public static StadiumDAO getInstance() {
+        if(instance == null) {
+            instance = new StadiumDAO();
+        }
+        return instance;
+    }
+
+
     public StadiumDAO(Connection connection) {
         this.connection = connection;
     }
@@ -20,12 +32,16 @@ public class StadiumDAO {
     //야구장 등록
     // @Param name
     // @throws SQLException
-    public void createStadium(String name) throws SQLException {
-        String query = "INSERT INTO stadium (name) VALUES (?)";
+    public int createStadium(String name) throws SQLException {
+        String query = "INSERT INTO stadium (name, created_at) VALUES (?, now())";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, name);
-            statement.executeUpdate();
+            int rowCount = statement.executeUpdate();
+            return rowCount;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return -1;
         }
     }
 
@@ -44,7 +60,7 @@ public class StadiumDAO {
                 Stadium stadium = new Stadium(
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
-                        resultSet.getTimestamp("createdAt")
+                        resultSet.getTimestamp("created_at")
                 );
                 stadiumList.add(stadium);
             }
